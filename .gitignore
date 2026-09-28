@@ -1,0 +1,14 @@
+# Allow-list: this folder also holds client-confidential files (contract,
+# proposal, pitch deck, demos). Only the paths below are ever committed.
+/*
+!/.gitignore
+!/README.md
+!/website/
+!/toolkit/
+
+# Never commit
+node_modules/
+.DS_Store
+.env
+.env.*
+toolkit/samples/.review-pack.html

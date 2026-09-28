@@ -1,0 +1,184 @@
+{
+  "profileFields": [
+    { "id": "name", "label": "Company name", "type": "text", "required": true },
+    { "id": "shortName", "label": "Short name", "type": "text", "placeholder": "Used in running text" },
+    { "id": "industry", "label": "Industry", "type": "text" },
+    { "id": "employees", "label": "Employees", "type": "text" },
+    { "id": "stage", "label": "Stage", "type": "select", "options": ["Growing", "Scaling", "Sustaining"] },
+    { "id": "location", "label": "Main location", "type": "text" },
+    { "id": "ceo", "label": "CEO or founder", "type": "text" },
+    { "id": "values", "label": "Company values", "type": "text", "placeholder": "Comma separated" },
+    { "id": "about", "label": "About the company", "type": "textarea", "placeholder": "Two or three sentences. Only facts the client has confirmed." }
+  ],
+  "pillars": [
+    {
+      "id": "select",
+      "letter": "S",
+      "name": "Select",
+      "tagline": "Attract the right people, with the right attitude, faster.",
+      "templates": [
+        {
+          "id": "select.job-description",
+          "file": "select/job-description.md",
+          "name": "Job Description",
+          "description": "Outcomes, responsibilities, right attitude",
+          "fields": [
+            { "id": "roleTitle", "label": "Role title", "type": "text", "required": true },
+            { "id": "department", "label": "Department", "type": "text" },
+            { "id": "reportsTo", "label": "Reports to", "type": "text" },
+            { "id": "employmentType", "label": "Employment type", "type": "select", "options": ["Full-time, regular after probation", "Full-time, project-based", "Part-time"] },
+            { "id": "location", "label": "Work location", "type": "text" },
+            { "id": "salaryBand", "label": "Salary band", "type": "text", "placeholder": "e.g. ₱65,000 to ₱85,000 per month" },
+            { "id": "outcomes", "label": "What success looks like in 12 months", "type": "textarea", "required": true, "placeholder": "One outcome per line, with numbers where you can" },
+            { "id": "mustHaves", "label": "Must-have experience", "type": "textarea", "placeholder": "Optional. One per line." },
+            { "id": "notes", "label": "Anything else the draft should reflect", "type": "textarea" }
+          ],
+          "sample": {
+            "roleTitle": "Sales Manager",
+            "department": "Sales & Distribution",
+            "reportsTo": "Chief Operating Officer",
+            "employmentType": "Full-time, regular after probation",
+            "location": "Pasig City, Metro Manila",
+            "salaryBand": "₱65,000 to ₱85,000 per month",
+            "outcomes": "Grow Luzon general-trade revenue by 20% in 12 months\nBuild and coach a team of 8 sales officers\nCut days-sales-outstanding from 62 to 45",
+            "mustHaves": "7+ years in FMCG or food sales, 3 of them leading a team\nBoth general-trade and modern-trade experience",
+            "notes": ""
+          }
+        },
+        {
+          "id": "select.job-ad",
+          "file": "select/job-ad.md",
+          "name": "Job Ad",
+          "description": "Attract the right people, faster",
+          "fields": [
+            { "id": "roleTitle", "label": "Role title", "type": "text", "required": true },
+            { "id": "location", "label": "Work location", "type": "text" },
+            { "id": "employmentType", "label": "Employment type", "type": "select", "options": ["Full-time, regular after probation", "Full-time, project-based", "Part-time"] },
+            { "id": "salaryBand", "label": "Salary band", "type": "text", "placeholder": "Showing pay is strongly recommended" },
+            { "id": "outcomes", "label": "What the hire will own", "type": "textarea", "required": true, "placeholder": "One outcome per line" },
+            { "id": "sellingPoints", "label": "Why the right person would join", "type": "textarea", "placeholder": "Growth, access to leadership, the mission" },
+            { "id": "apply", "label": "How to apply", "type": "text", "placeholder": "Email or link" }
+          ],
+          "sample": {
+            "roleTitle": "Sales Manager",
+            "location": "Pasig City, Metro Manila",
+            "employmentType": "Full-time, regular after probation",
+            "salaryBand": "₱65,000 to ₱85,000 per month",
+            "outcomes": "Grow Luzon general-trade revenue by 20% in 12 months\nBuild and coach a team of 8 sales officers\nCut days-sales-outstanding from 62 to 45",
+            "sellingPoints": "Direct line to the COO and CEO\nThe company is building the team for nationwide distribution\nPerformance-related rewards",
+            "apply": ""
+          }
+        },
+        {
+          "id": "select.interview-guide",
+          "file": "select/interview-guide.md",
+          "name": "Interview Guide",
+          "description": "1-Day Hiring Process, with rubric",
+          "fields": [
+            { "id": "roleTitle", "label": "Role title", "type": "text", "required": true },
+            { "id": "hiringManager", "label": "Hiring manager", "type": "text" },
+            { "id": "panel", "label": "Interview panel", "type": "textarea", "placeholder": "Names or roles, one per line" },
+            { "id": "interviewDate", "label": "Interview date", "type": "text" },
+            { "id": "outcomes", "label": "Role outcomes", "type": "textarea", "required": true, "placeholder": "From the Job Description, one per line" },
+            { "id": "attitudeTraits", "label": "Attitude traits to test", "type": "textarea", "placeholder": "Optional. Company values are used if blank." },
+            { "id": "mustHaves", "label": "Must-have experience", "type": "textarea" }
+          ],
+          "sample": {
+            "roleTitle": "Sales Manager",
+            "hiringManager": "A. Cruz, Chief Operating Officer",
+            "panel": "HR Lead\nA. Cruz, Chief Operating Officer\nKey Account Manager (future peer)\nCEO, for the decision huddle",
+            "interviewDate": "October 8, 2026",
+            "outcomes": "Grow Luzon general-trade revenue by 20% in 12 months\nBuild and coach a team of 8 sales officers\nCut days-sales-outstanding from 62 to 45",
+            "attitudeTraits": "",
+            "mustHaves": "7+ years in FMCG or food sales, 3 of them leading a team\nBoth general-trade and modern-trade experience"
+          }
+        },
+        {
+          "id": "select.90-day-success-check",
+          "file": "select/90-day-success-check.md",
+          "name": "90-Day New Hire Success Check",
+          "description": "Confirm, support, or decide",
+          "fields": [
+            { "id": "roleTitle", "label": "Role title", "type": "text", "required": true },
+            { "id": "newHireName", "label": "New hire", "type": "text" },
+            { "id": "manager", "label": "Manager", "type": "text" },
+            { "id": "startDate", "label": "Start date", "type": "text" },
+            { "id": "goals", "label": "90-day goals", "type": "textarea", "required": true, "placeholder": "One goal per line" }
+          ],
+          "sample": {
+            "roleTitle": "Sales Manager",
+            "newHireName": "Carlo Dizon",
+            "manager": "A. Cruz, Chief Operating Officer",
+            "startDate": "October 19, 2026",
+            "goals": "Meet all 14 key general-trade distributors in Luzon\nAgree a 12-month sales plan with the COO by Day 60\nHold the first monthly performance conversation with each of the 8 sales officers\nRecover ₱3M of receivables older than 90 days"
+          }
+        }
+      ]
+    },
+    {
+      "id": "perform",
+      "letter": "P",
+      "name": "Perform",
+      "tagline": "Deliver above and beyond, consistently.",
+      "templates": [
+        {
+          "id": "perform.performance-scorecard",
+          "file": "perform/performance-scorecard.md",
+          "name": "Performance Scorecard",
+          "description": "Results and behaviors, scored monthly",
+          "fields": [
+            { "id": "roleTitle", "label": "Role title", "type": "text", "required": true },
+            { "id": "employeeName", "label": "Employee", "type": "text" },
+            { "id": "manager", "label": "Manager", "type": "text" },
+            { "id": "period", "label": "Review period", "type": "text", "placeholder": "e.g. October 2026 to September 2027" },
+            { "id": "kpis", "label": "KPIs and targets", "type": "textarea", "required": true, "placeholder": "One per line: KPI, target" },
+            { "id": "weights", "label": "Results / behaviors weighting", "type": "select", "options": ["70% results, 30% behaviors", "60% results, 40% behaviors", "80% results, 20% behaviors"] }
+          ],
+          "sample": {
+            "roleTitle": "Sales Manager",
+            "employeeName": "Carlo Dizon",
+            "manager": "A. Cruz, Chief Operating Officer",
+            "period": "October 2026 to September 2027",
+            "kpis": "Luzon general-trade revenue growth, +20% vs previous year\nDays-sales-outstanding, 45 days by month 12\nSales officers meeting monthly target, 8 of 8 by month 12\nMonthly performance conversations held with each officer, 100% every month",
+            "weights": "70% results, 30% behaviors"
+          }
+        },
+        {
+          "id": "perform.goal-setting-sheet",
+          "file": "perform/goal-setting-sheet.md",
+          "name": "Goal-Setting Sheet",
+          "description": "Line of sight from company to person",
+          "fields": [
+            { "id": "employeeName", "label": "Employee", "type": "text" },
+            { "id": "roleTitle", "label": "Role title", "type": "text", "required": true },
+            { "id": "manager", "label": "Manager", "type": "text" },
+            { "id": "period", "label": "Goal period", "type": "text" },
+            { "id": "companyPriorities", "label": "Company priorities this year", "type": "textarea", "required": true, "placeholder": "One per line" },
+            { "id": "roleOutcomes", "label": "Role outcomes", "type": "textarea", "placeholder": "From the Job Description or Scorecard" },
+            { "id": "development", "label": "Capability to build next", "type": "text" }
+          ],
+          "sample": {
+            "employeeName": "Carlo Dizon",
+            "roleTitle": "Sales Manager",
+            "manager": "A. Cruz, Chief Operating Officer",
+            "period": "October 2026 to September 2027",
+            "companyPriorities": "Reach nationwide distribution by 2028\nImprove cash flow\nBuild the management bench",
+            "roleOutcomes": "Grow Luzon general-trade revenue by 20%\nBuild and coach a team of 8 sales officers\nCut days-sales-outstanding from 62 to 45\nHold a monthly performance conversation with every officer",
+            "development": "Lead managers, not only sales officers, ready for nationwide expansion"
+          }
+        }
+      ]
+    }
+  ],
+  "sampleProfile": {
+    "name": "Bayanihan Foods Corporation",
+    "shortName": "Bayanihan Foods",
+    "industry": "Food manufacturing and distribution",
+    "employees": "140",
+    "stage": "Growing",
+    "location": "Pasig City, Metro Manila",
+    "ceo": "Ramon Villanueva",
+    "values": "Ownership, Coaching, Straight talk",
+    "about": "Bayanihan Foods Corporation manufactures and distributes packaged snacks and condiments to general-trade and modern-trade accounts across Luzon. The company has grown to 140 employees and is building the management layer it needs for nationwide distribution."
+  }
+}

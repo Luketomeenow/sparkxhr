@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPARKXHR Toolkit · Select and Perform</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="mark" aria-hidden="true"><i></i><i></i><i class="g"></i><i></i><i></i></span>
+    <span class="name">SPARK<b>X</b>HR</span>
+    <span class="product">Toolkit</span>
+  </div>
+  <span class="mode" id="mode">Connecting…</span>
+  <div class="spacer"></div>
+  <label class="client-pick">Client
+    <select id="clientSel" aria-label="Client"></select>
+  </label>
+  <button class="ghost" id="editClient" type="button">Edit profile</button>
+  <button class="ghost" id="newClient" type="button">New client</button>
+</header>
+
+<div class="shell">
+  <nav class="side" aria-label="Pillars">
+    <p class="sec">SPARK pillars</p>
+    <div id="pillarNav"></div>
+    <div class="nav locked"><span class="l">A</span><span>Accelerate<small>Milestone 3</small></span></div>
+    <div class="nav locked"><span class="l">R</span><span>Reward<small>Milestone 2</small></span></div>
+    <div class="nav locked"><span class="l">K</span><span>Kindle<small>Milestone 3</small></span></div>
+    <p class="foot">Every document is an AI first draft built from the SPARK templates. Review and edit before it reaches a client.</p>
+  </nav>
+
+  <main class="main">
+    <div class="head">
+      <p class="kicker" id="pillarKicker">Select pillar</p>
+      <h1 id="pillarTagline">Attract the right people, with the right attitude, faster.</h1>
+      <p class="client-line" id="clientLine"></p>
+    </div>
+
+    <div class="tpl-row" id="tplRow" role="tablist" aria-label="Templates"></div>
+
+    <div class="grid">
+      <section class="card form-card" aria-labelledby="formTitle">
+        <div class="card-head">
+          <h2 id="formTitle">Inputs</h2>
+          <button class="link" id="fillSample" type="button">Fill sample inputs</button>
+        </div>
+        <form id="form" novalidate></form>
+        <p class="err" id="formErr" hidden></p>
+        <button class="primary full" id="genBtn" type="button"><span class="spark">✦</span> Draft with AI</button>
+        <p class="hint">Only facts in the profile and inputs are used. Anything missing is left as a [placeholder] for you to fill.</p>
+      </section>
+
+      <section class="card doc-card" aria-labelledby="docTitle">
+        <div class="toolbar">
+          <div class="status" id="status" role="status" aria-live="polite">Choose a template, check the inputs, and draft.</div>
+          <select id="versions" aria-label="Saved versions" hidden></select>
+          <button class="tool" data-act="save" type="button" disabled>Save version</button>
+          <button class="tool" data-act="copy" type="button" disabled>Copy</button>
+          <button class="tool" data-act="docx" type="button" disabled>Word</button>
+          <button class="tool" data-act="pdf" type="button" disabled>PDF</button>
+        </div>
+        <div class="notice" id="notice" hidden></div>
+        <h2 class="sr-only" id="docTitle">Draft</h2>
+        <article class="doc empty" id="doc">
+          <div class="empty-state">
+            <p class="big">Your SPARK toolkit, drafted in minutes</p>
+            <p>The draft appears here as it is written. When it finishes you can edit it directly, save a version, and export it to Word or PDF.</p>
+          </div>
+        </article>
+      </section>
+    </div>
+  </main>
+</div>
+
+<dialog id="clientDlg" aria-labelledby="clientDlgTitle">
+  <form method="dialog" id="clientForm">
+    <h2 id="clientDlgTitle">Client profile</h2>
+    <p class="hint">Used in every document for this client. Keep to facts the client has confirmed.</p>
+    <div id="clientFields"></div>
+    <div class="dlg-actions">
+      <button class="ghost dark" value="cancel" type="submit" formnovalidate>Cancel</button>
+      <button class="primary" value="save" type="submit">Save profile</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="vendor/marked.umd.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

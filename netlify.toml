@@ -1,0 +1,6 @@
+# Netlify deploys the marketing site in website/.
+# toolkit/ is a Node server with no logins yet, so it is not deployed here.
+[build]
+  publish = "website"
+  # Rebuild the pages from website/src; if Python is unavailable, the committed pages deploy as they are.
+  command = "python3 website/build.py || echo 'Build script unavailable; deploying the committed pages.'"

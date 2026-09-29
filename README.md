@@ -16,7 +16,11 @@ cd website
 python3 build.py
 ```
 
-Open `website/index.html`, or deploy the `website/` folder to any static host. Site settings (Pulse Check link, booking calendar, form endpoint, email, social links) are at the top of `website/build.py`.
+Open `website/index.html`, or deploy the `website/` folder to any static host.
+
+**Netlify:** `netlify.toml` at the repo root publishes `website/` and rebuilds it on every push, so no settings are needed in the Netlify dashboard. The toolkit is not deployed.
+
+Site settings (Pulse Check link, booking calendar, form endpoint, email, social links) are at the top of `website/build.py`.
 
 ## Toolkit
 

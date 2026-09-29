@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPARK Pulse Check · SPARKXHR</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<style>
+  :root {
+    --navy: #1B2559; --navy-deep: #141B45; --navy-2: #232E6B;
+    --gold: #C8973A; --gold-bright: #D4A53A; --gold-soft: #E8C567; --gold-wash: rgba(200,151,58,0.14);
+    --surface: #F7F4EC; --panel: #FFFFFF; --panel-2: #FBF9F4; --line: #E6E1D3; --line-2: #D5CFBE; --track: #ECE7DA;
+    --ink: #1B2559; --ink-2: #4E5678; --ink-3: #7C8399;
+    --serif: Georgia, "Cambria", "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { font-family: var(--sans); font-size: 15px; color: var(--ink); background: var(--surface); line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; }
+  button { font-family: inherit; }
+
+  .top { background: var(--navy-deep); color: #fff; height: 60px; display: flex; align-items: center; padding: 0 28px; gap: 14px; }
+  .brand .k { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-soft); font-weight: 700; display: block; line-height: 1; margin-bottom: 3px; }
+  .brand .t { font-family: var(--serif); font-size: 19px; }
+  .badge { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; background: var(--gold-bright); color: var(--navy); font-weight: 800; padding: 4px 9px; border-radius: 4px; }
+  .spacer { flex: 1; }
+  .viewsw { display: inline-flex; border: 1px solid rgba(255,255,255,0.25); border-radius: 7px; overflow: hidden; }
+  .viewsw button { background: transparent; color: #C9CFE8; border: none; padding: 7px 14px; font-size: 12.5px; cursor: pointer; font-weight: 600; }
+  .viewsw button.sel { background: var(--gold-bright); color: var(--navy); }
+
+  main { flex: 1; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 36px 24px 60px; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* Intro */
+  .hero { background: var(--navy); color: #fff; border-radius: 14px; padding: 44px 48px; position: relative; overflow: hidden; margin-bottom: 22px; }
+  .hero .blob { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.04); }
+  .hero .k { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-soft); font-weight: 700; margin-bottom: 10px; }
+  .hero h1 { font-family: var(--serif); font-weight: 400; font-size: 40px; line-height: 1.12; margin: 0 0 12px; }
+  .hero h1 em { font-style: normal; color: var(--gold-soft); }
+  .hero p { color: #C9CFE8; font-size: 16px; max-width: 620px; margin: 0 0 8px; }
+  .hero .facts { display: flex; gap: 28px; margin-top: 22px; flex-wrap: wrap; }
+  .hero .facts div { font-size: 13px; color: #C9CFE8; }
+  .hero .facts b { display: block; font-family: var(--serif); font-size: 24px; color: #fff; font-weight: 400; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 26px 30px; }
+  .card h2 { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 14px; font-weight: 800; }
+  label.f { display: block; font-size: 12.5px; color: var(--ink-2); font-weight: 700; margin: 12px 0 5px; }
+  input[type=text], input[type=email], select { width: 100%; border: 1px solid var(--line-2); border-radius: 8px; padding: 10px 12px; font-size: 15px; font-family: inherit; background: #fff; color: var(--ink); }
+  input:focus, select:focus { outline: 2px solid rgba(200,151,58,0.5); border-color: var(--gold); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .consent { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--ink-2); margin-top: 16px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+  .consent input { margin-top: 3px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; border: none; border-radius: 9px; padding: 13px 22px; font-size: 15px; font-weight: 700; cursor: pointer; background: var(--gold-bright); color: var(--navy); }
+  .btn:hover { background: var(--gold-soft); }
+  .btn.ghost { background: #fff; border: 1px solid var(--line-2); color: var(--ink); font-weight: 600; }
+  .btn.ghost:hover { border-color: var(--gold); background: var(--gold-wash); }
+  .btn:disabled { opacity: 0.5; cursor: default; }
+  .err { color: #9B2C2C; font-size: 12.5px; margin-top: 8px; display: none; }
+  .err.show { display: block; }
+
+  /* Survey */
+  .prog { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; font-size: 12.5px; color: var(--ink-2); }
+  .prog .bar { flex: 1; height: 6px; background: var(--track); border-radius: 3px; overflow: hidden; }
+  .prog .bar i { display: block; height: 100%; background: var(--gold-bright); width: 0; transition: width 0.3s; }
+  .prog .pill { font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); font-weight: 800; border: 1px solid rgba(200,151,58,0.45); border-radius: 4px; padding: 2px 8px; }
+  .q { font-family: var(--serif); font-size: 26px; line-height: 1.25; margin: 0 0 6px; color: var(--ink); }
+  .qh { font-size: 13.5px; color: var(--ink-2); margin: 0 0 20px; }
+  .opts { display: grid; gap: 10px; }
+  .opt { text-align: left; background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 10px; padding: 14px 16px 14px 52px; font-size: 15px; cursor: pointer; color: var(--ink); position: relative; line-height: 1.4; transition: all 0.12s; }
+  .opt:before { content: attr(data-l); position: absolute; left: 14px; top: 12px; width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--line-2); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; color: var(--ink-2); background: #fff; }
+  .opt:hover { border-color: var(--gold); background: var(--gold-wash); }
+  .opt.sel { border-color: var(--gold); background: var(--gold-wash); box-shadow: inset 0 0 0 1px var(--gold); }
+  .opt.sel:before { background: var(--gold-bright); border-color: var(--gold-bright); color: var(--navy); }
+  .navrow { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; }
+  .navrow .hint { font-size: 12.5px; color: var(--ink-3); }
+
+  /* Thinking */
+  .think { text-align: center; padding: 60px 20px; }
+  .think .big { font-family: var(--serif); font-size: 28px; margin-bottom: 8px; }
+  .think .steps { display: inline-flex; flex-direction: column; gap: 10px; text-align: left; margin-top: 20px; }
+  .think .steps div { font-size: 14px; color: var(--ink-3); display: flex; align-items: center; gap: 10px; }
+  .think .steps div i { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--line-2); display: inline-block; }
+  .think .steps div.on { color: var(--ink); }
+  .think .steps div.on i { border-color: var(--gold-bright); background: var(--gold-bright); }
+  .think .steps div.now i { border-color: var(--gold-bright); animation: spin 0.9s linear infinite; border-top-color: transparent; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Report */
+  .rep { background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .rep .rh { background: var(--navy); color: #fff; padding: 30px 38px; display: flex; justify-content: space-between; gap: 20px; align-items: flex-end; }
+  .rep .rh .k { font-size: 10.5px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-soft); font-weight: 700; margin-bottom: 8px; }
+  .rep .rh h1 { font-family: var(--serif); font-weight: 400; font-size: 30px; margin: 0 0 4px; line-height: 1.15; }
+  .rep .rh .s { color: #C9CFE8; font-size: 13.5px; }
+  .rep .rh .stage { text-align: right; }
+  .rep .rh .stage span { font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #C9CFE8; display: block; }
+  .rep .rh .stage b { font-family: var(--serif); font-size: 30px; color: var(--gold-soft); font-weight: 400; }
+  .rep .body { padding: 30px 38px; }
+  .rep h2 { font-size: 11.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-2); margin: 26px 0 12px; font-weight: 800; }
+  .rep h2:first-child { margin-top: 0; }
+  .rep p { margin: 0 0 10px; font-size: 14.5px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .pillars { display: grid; gap: 10px; }
+  .pl { display: grid; grid-template-columns: 150px 1fr 48px; gap: 12px; align-items: center; font-size: 13.5px; }
+  .pl .n { font-weight: 700; }
+  .pl .n small { display: block; font-weight: 400; color: var(--ink-3); font-size: 11px; }
+  .pl .t { height: 12px; background: var(--track); border-radius: 6px; overflow: hidden; }
+  .pl .t i { display: block; height: 100%; background: var(--gold-bright); width: 0; transition: width 0.9s ease; border-radius: 0 6px 6px 0; }
+  .pl.weak .t i { background: var(--navy); }
+  .pl .v { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+  .pl.weak .n:after { content: 'Leaking'; font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; background: var(--navy); color: #fff; border-radius: 3px; padding: 1px 6px; margin-left: 6px; vertical-align: middle; }
+  .cost { background: var(--gold-wash); border: 1px solid rgba(200,151,58,0.4); border-radius: 10px; padding: 18px 20px; }
+  .cost .big { font-size: 34px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.05; }
+  .cost .sub { font-size: 12.5px; color: var(--ink-2); margin-top: 4px; }
+  .cost table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  .cost td { font-size: 12.5px; padding: 5px 0; border-top: 1px solid rgba(200,151,58,0.3); }
+  .cost td:last-child { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+  .leak { border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; }
+  .leak .l { font-family: var(--serif); font-size: 32px; color: var(--gold); line-height: 1; float: right; }
+  .leak h3 { margin: 0 0 8px; font-size: 16px; }
+  .leak p { font-size: 13.5px; }
+  .leak .fm { background: var(--panel-2); border-left: 3px solid var(--gold); padding: 8px 12px; font-size: 13px; margin-top: 10px; }
+  .leak .fm b { color: var(--gold); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; display: block; margin-bottom: 2px; }
+  .tier { background: var(--navy); color: #fff; border-radius: 10px; padding: 20px 24px; display: flex; justify-content: space-between; gap: 20px; align-items: center; }
+  .tier .k { font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-soft); font-weight: 700; }
+  .tier h3 { font-family: var(--serif); font-weight: 400; font-size: 24px; margin: 4px 0 4px; }
+  .tier p { color: #C9CFE8; font-size: 13.5px; margin: 0; }
+  .tier .pr { text-align: right; white-space: nowrap; }
+  .tier .pr b { display: block; font-size: 20px; color: var(--gold-soft); font-weight: 700; }
+  .tier .pr span { font-size: 12px; color: #C9CFE8; }
+  ol.acts { margin: 0; padding-left: 0; list-style: none; counter-reset: a; }
+  ol.acts li { counter-increment: a; display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  ol.acts li:last-child { border-bottom: none; }
+  ol.acts li:before { content: counter(a); font-family: var(--serif); font-size: 24px; color: var(--gold); line-height: 1; }
+  .cta { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--line); }
+  .cta .note { flex: 1; font-size: 12.5px; color: var(--ink-3); min-width: 220px; }
+  .rep .foot { padding: 14px 38px; background: var(--panel-2); border-top: 1px solid var(--line); font-size: 11.5px; color: var(--ink-3); }
+
+  /* Fides view */
+  .fv .grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; align-items: start; }
+  .lead { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .lead .eh { background: var(--panel-2); border-bottom: 1px solid var(--line); padding: 12px 16px; font-size: 12.5px; color: var(--ink-2); }
+  .lead .eh b { color: var(--ink); }
+  .lead .eb { padding: 16px; font-size: 13.5px; }
+  .lead .eb table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+  .lead .eb td { padding: 5px 0; border-bottom: 1px solid var(--line); font-size: 13px; vertical-align: top; }
+  .lead .eb td:first-child { color: var(--ink-3); width: 36%; padding-right: 10px; }
+  table.leads { width: 100%; border-collapse: collapse; }
+  table.leads th { text-align: left; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); padding: 6px 8px; border-bottom: 1px solid var(--line-2); font-weight: 700; }
+  table.leads td { padding: 9px 8px; border-bottom: 1px solid var(--line); font-size: 13px; vertical-align: middle; }
+  table.leads tr.new td { background: var(--gold-wash); }
+  table.leads .co b { display: block; }
+  table.leads .co span { font-size: 11.5px; color: var(--ink-3); }
+  .tagp { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--ink-2); background: var(--panel-2); white-space: nowrap; }
+  .tagp.hot { background: var(--gold-wash); border-color: rgba(200,151,58,0.5); color: var(--ink); }
+  .emptyf { text-align: center; color: var(--ink-3); padding: 40px; font-size: 14px; }
+  .ans { margin-top: 14px; }
+  .ans details { border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; font-size: 13px; }
+  .ans summary { cursor: pointer; font-weight: 700; color: var(--ink-2); }
+  .ans li { margin: 6px 0; color: var(--ink-2); }
+  .ans li b { color: var(--ink); font-weight: 600; }
+
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--navy); color: #fff; padding: 12px 18px; border-radius: 8px; font-size: 13.5px; opacity: 0; transition: all 0.2s; box-shadow: 0 10px 30px rgba(0,0,0,0.25); z-index: 50; pointer-events: none; max-width: 90vw; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast b { color: var(--gold-soft); }
+  .disclaimer { font-size: 12px; color: var(--ink-3); margin-top: 14px; text-align: center; }
+
+  @media (max-width: 760px) { .two, .grid2, .fv .grid { grid-template-columns: 1fr; } .hero { padding: 30px 24px; } .hero h1 { font-size: 30px; } .rep .rh, .tier { flex-direction: column; align-items: flex-start; } .rep .rh .stage, .tier .pr { text-align: left; } .pl { grid-template-columns: 110px 1fr 44px; } .viewsw { display: none; } }
+  @media print {
+    .top, .cta, .disclaimer, .toast { display: none !important; }
+    body { background: #fff; } .wrap { padding: 0; max-width: none; }
+    .screen { display: none !important; } #s-report { display: block !important; }
+    .rep { border: none; border-radius: 0; } .rep .rh, .tier { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <a class="brand" href="index.html" style="color:inherit;text-decoration:none" aria-label="Back to the SPARKXHR website"><span class="k">SPARKXHR</span><span class="t">SPARK Pulse Check</span></a>
+  <span class="badge">Demo · simulated AI</span>
+  <div class="spacer"></div>
+  <div class="viewsw"><button class="sel" data-v="ceo">What the CEO sees</button><button data-v="fides">What Fides receives</button></div>
+</div>
+
+<main>
+<div class="wrap">
+
+  <!-- INTRO + PROFILE -->
+  <section class="screen active" id="s-intro">
+    <div class="hero">
+      <div class="blob" style="width:420px;height:420px;right:-140px;top:-180px;"></div>
+      <div class="blob" style="width:260px;height:260px;left:-90px;bottom:-140px;"></div>
+      <div class="k">Free diagnostic · Five minutes</div>
+      <h1>Where is your people engine <em>quietly leaking money?</em></h1>
+      <p>Fifteen questions a CEO can answer without opening a spreadsheet. You get a personalised diagnosis built on 33 years of Group CHRO judgment: your business stage, the two pillars costing you most, an estimate in pesos, and three moves for this month.</p>
+      <div class="facts"><div><b>15</b>questions</div><div><b>5 min</b>to complete</div><div><b>₱0</b>no strings attached</div></div>
+    </div>
+    <div class="card">
+      <h2>About your company</h2>
+      <div class="two">
+        <div><label class="f">Company name</label><input type="text" id="pCompany" placeholder="e.g. Bayanihan Foods Corporation"></div>
+        <div><label class="f">Industry</label><select id="pIndustry"><option>Manufacturing</option><option>Retail &amp; distribution</option><option>Logistics &amp; transport</option><option>Professional services</option><option>Technology / BPO</option><option>Hospitality &amp; food service</option><option>Construction &amp; real estate</option><option>Healthcare</option><option>Other</option></select></div>
+      </div>
+      <div class="two">
+        <div><label class="f">How many employees?</label><select id="pSize"><option value="0">Under 20</option><option value="1">20 to 49</option><option value="2" selected>50 to 149</option><option value="3">150 to 499</option><option value="4">500 or more</option></select></div>
+        <div><label class="f">Average monthly salary across the company</label><select id="pPay"><option value="0">Under ₱20,000</option><option value="1" selected>₱20,000 to ₱35,000</option><option value="2">₱35,000 to ₱60,000</option><option value="3">Over ₱60,000</option></select></div>
+      </div>
+      <div class="two">
+        <div><label class="f">Your name</label><input type="text" id="pName" placeholder="First and last name"></div>
+        <div><label class="f">Work email (your report goes here)</label><input type="email" id="pEmail" placeholder="you@company.ph"></div>
+      </div>
+      <label class="consent"><input type="checkbox" id="pConsent"><span>I agree that Faith &amp; Possibilities HR Consulting may process these answers to prepare my Pulse Check report and contact me about it, in line with the Data Privacy Act of 2012 (RA 10173). My data will not be sold or used to train public AI models, and I can ask for it to be deleted at any time.</span></label>
+      <div class="err" id="pErr">Please fill in your company, name, and email, and tick the consent box to continue.</div>
+      <div class="navrow"><span class="hint">Your answers are confidential. Only you and Fides see the report.</span><button class="btn" id="startBtn">Start the Pulse Check →</button></div>
+    </div>
+    <p class="disclaimer">Demo: the diagnosis below is produced by rules that mirror the SPARK framework. In the live version, the AI writes the narrative from your actual answers and Fides's own diagnostic logic.</p>
+  </section>
+
+  <!-- SURVEY -->
+  <section class="screen" id="s-survey">
+    <div class="card">
+      <div class="prog"><span class="pill" id="qPillar">Select</span><div class="bar"><i id="qBar"></i></div><span id="qCount">1 / 15</span></div>
+      <div class="q" id="qText"></div>
+      <p class="qh" id="qHelp"></p>
+      <div class="opts" id="qOpts"></div>
+      <div class="navrow"><button class="btn ghost" id="backBtn">← Back</button><span class="hint">Pick the answer closest to how things actually are, not how you'd like them to be.</span><button class="btn" id="nextBtn" disabled>Next →</button></div>
+    </div>
+  </section>
+
+  <!-- THINKING -->
+  <section class="screen" id="s-think">
+    <div class="card think">
+      <div class="big">Reading your answers…</div>
+      <div style="color:var(--ink-2)">Applying the SPARK framework the way Fides would in a first conversation.</div>
+      <div class="steps" id="tSteps">
+        <div><i></i>Working out your business stage</div>
+        <div><i></i>Scoring the five SPARK pillars</div>
+        <div><i></i>Estimating the peso cost of the leaks</div>
+        <div><i></i>Choosing the right-sized next step</div>
+        <div><i></i>Writing your report</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REPORT -->
+  <section class="screen" id="s-report">
+    <div class="rep" id="report"></div>
+    <p class="disclaimer">Estimates are indicative and based only on your answers. They are meant to start a conversation, not close one.</p>
+  </section>
+
+  <!-- FIDES VIEW -->
+  <section class="screen fv" id="s-fides">
+    <div class="card">
+      <h2>Pulse Check leads · what lands in Fides's inbox and dashboard</h2>
+      <div class="grid">
+        <div class="lead" id="leadCard"><div class="emptyf">Complete a Pulse Check in the CEO view to see the lead it produces here.</div></div>
+        <div>
+          <table class="leads"><thead><tr><th>Company</th><th>Stage</th><th>Leaking</th><th>Est. cost / yr</th><th>Suggested</th></tr></thead><tbody id="leadRows"></tbody></table>
+          <p class="disclaimer" style="text-align:left;">Every completed Pulse Check appears here with the full answer set. Fides can filter by stage, pillar, and suggested tier, and book the follow-up call in one click.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  'use strict';
+  const $ = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const peso = n => '₱' + Math.round(n).toLocaleString('en-PH');
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const toastEl = $('#toast'); let toastT;
+  const toast = h => { toastEl.innerHTML = h; toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(()=>toastEl.classList.remove('show'), 3200); };
+
+  // ---------- Questions ----------
+  // score: index of option = 0 (worst) .. 3 (best)
+  const Q = [
+    { p:'Stage', k:'decisions', t:'How are the important decisions made in your company today?', h:'Hiring, pricing, a big customer, a new location.', o:['I make nearly all of them myself','I make them with one or two key people','Managers decide within their areas and I review','Managers decide; I only see the exceptions'] },
+    { p:'Accelerate', k:'absence', t:'If you were unavailable for three months, what would happen?', h:'Be honest. This is the question most CEOs avoid.', o:['The business would stall','It would run for a few weeks, then problems pile up','It would run, but key decisions would wait for me','It would run fine; a successor is ready'] },
+    { p:'Select', k:'ttf', t:'How long does it usually take to fill an important role?', h:'From deciding to hire to the person accepting.', o:['Three months or more','Two to three months','One to two months','Under a month'] },
+    { p:'Select', k:'badhires', t:'How many hires in the last 12 months would you call mistakes?', h:'People who left early, were let go, or should have been.', o:['Three or more','Two','One','None'] },
+    { p:'Select', k:'process', t:'How do you hire today?', h:'Think about your last three hires.', o:['Whoever is free interviews; we go on gut feel','The manager interviews, with no set questions','We have set steps and some structure','A structured process with scorecards and same-day decisions'] },
+    { p:'Select', k:'open', t:'How many roles are open right now?', h:'Approved positions with no one in the seat.', o:['Five or more','Three or four','One or two','None'] },
+    { p:'Perform', k:'goals', t:'Does every employee have written goals for this year?', h:'Goals they could show you if you asked today.', o:['No','Managers only','Most people do','Everyone, and they are reviewed quarterly'] },
+    { p:'Perform', k:'convos', t:'How often do managers hold performance conversations with their people?', h:'A real conversation about results, not a form.', o:['Only when there is a problem','Once a year','Twice a year','Monthly or more often'] },
+    { p:'Perform', k:'lowperf', t:'What happens to a consistent low performer?', h:'Someone who has missed targets for six months.', o:['Nothing; they stay','They get moved to another team','They are eventually managed out, slowly','A clear improvement plan, then a decision within 90 days'] },
+    { p:'Accelerate', k:'managers', t:'How ready are your managers to actually manage?', h:'Leading people, not just being good at the technical work.', o:['Most were promoted for technical skill and struggle with people','Some are ready, most are not','Most are ready','All have been trained and are coached regularly'] },
+    { p:'Accelerate', k:'successors', t:'Do your key roles have a named successor?', h:'Someone who could step in within a month.', o:['None of them','A few of them','Most of them','All of them, with development plans in place'] },
+    { p:'Reward', k:'payfor', t:'What does pay mostly reward in your company?', h:'What actually drives an increase or a bonus.', o:['Tenure and attendance','Market rate, with no link to results','Partly results, partly tenure','Results, within clear pay bands'] },
+    { p:'Reward', k:'bands', t:'Do you have a pay structure, such as bands or grades?', h:'Something written down that managers use.', o:['No, pay is decided case by case','Informally, in my head','Yes, but it is outdated','Yes, current and used for every offer and increase'] },
+    { p:'Kindle', k:'engaged', t:'How many of your people would you describe as fully engaged?', h:'Giving real effort, not just attendance.', o:['Under half','About half','Most of them','Nearly all of them'] },
+    { p:'Kindle', k:'turnover', t:'What was voluntary turnover over the last 12 months?', h:'People who chose to leave, as a share of headcount.', o:['Over 25%','15% to 25%','8% to 15%','Under 8%'] },
+  ];
+  const pillarOrder = ['Select','Perform','Accelerate','Reward','Kindle'];
+  const pillarMeta = {
+    Select: { tag:'Attract the right people, right attitude, faster', see:'Hiring is slow or unstructured and mistakes are getting through. Every vacant seat and every wrong hire shows up as revenue you did not make and rework you paid for.', move:'Put one role through the SPARK 1-Day Hiring Process this month: structured interviews, a scorecard, a same-day decision.' },
+    Perform: { tag:'Deliver above and beyond, consistently', see:'People are working without written goals or regular conversations about results. Full salary, a fraction of the output, and no one is quite sure who is carrying whom.', move:'Give every manager a one-page Performance Scorecard for their team and hold the first monthly conversation before the 30th.' },
+    Accelerate: { tag:'Develop performance-driven future leaders', see:'Managers were promoted for technical skill, not for leading people, and key roles have no successor. Every manager failure shows up as turnover, and key-person risk is discounting the value of your business.', move:'Map your key roles on a Succession Depth Chart and pick the two managers who most need coaching this quarter.' },
+    Reward: { tag:'Recognise and reward excellent performance', see:'Pay is rewarding tenure and attendance rather than outcomes, and offers are made case by case. That is a payroll that grows while output stays flat.', move:'Write a one-page Pay Philosophy and draft bands for your five most common roles.' },
+    Kindle: { tag:'Ignite a culture of passion and productivity', see:'Engagement is low or unmeasured and people are leaving. Disengaged staff cost you full salary for partial output, and replacing leavers costs months of productivity each time.', move:'Run a ten-question engagement pulse this month and share the results, and one action, with the whole company.' },
+  };
+  const sizeMid = [12, 35, 100, 300, 700], sizeLabel = ['Under 20','20 to 49','50 to 149','150 to 499','500+'];
+  const payMid = [15000, 27500, 47500, 80000];
+  const tiers = {
+    foundations: { n:'SPARK Foundations', d:'Compliance and documentation templates to get the basics right before you scale.', p:'₱1,499 to ₱2,999', u:'one-time' },
+    toolkit: { n:'SPARK Toolkit', d:'A digital toolkit for your weakest pillar, ready to use this week.', p:'₱4,900 to ₱14,900', u:'per pillar' },
+    sprint: { n:'SPARK Sprint', d:'A two-to-six week engagement that fixes one pillar properly, with Fides working alongside your managers.', p:'₱75,000 to ₱250,000', u:'per sprint' },
+    partner: { n:'SPARK Partner', d:'A fractional Group CHRO on a quarterly retainer, rotating through the pillars that are leaking most.', p:'₱150,000 to ₱400,000', u:'per quarter' },
+    transformation: { n:'SPARK Transformation', d:'A full five-pillar reinvention of how the organisation selects, performs, develops, rewards, and ignites its people.', p:'₱800,000 to ₱2.5M+', u:'project' },
+  };
+  const sampleLeads = [
+    { co:'Lakbay Logistics Inc.', who:'Marites Ong · 85 employees', stage:'Growing', leak:'Select, Accelerate', cost:1240000, tier:'SPARK Sprint', hot:true },
+    { co:'Solano Dental Group', who:'Dr. R. Solano · 32 employees', stage:'Growing', leak:'Perform, Reward', cost:410000, tier:'SPARK Toolkit', hot:false },
+    { co:'Northgate Realty Corp.', who:'C. Aquino · 210 employees', stage:'Scaling', leak:'Accelerate, Kindle', cost:3860000, tier:'SPARK Partner', hot:true },
+    { co:'Isla Verde Resorts', who:'J. Lim · 640 employees', stage:'Sustaining', leak:'Accelerate, Perform', cost:9100000, tier:'SPARK Transformation', hot:false },
+  ];
+
+  // ---------- State ----------
+  let profile = null, answers = new Array(Q.length).fill(null), qi = 0, result = null;
+  const show = id => { $$('.screen').forEach(s => s.classList.toggle('active', s.id === id)); window.scrollTo({top:0, behavior:'smooth'}); };
+
+  // ---------- Profile ----------
+  $('#startBtn').addEventListener('click', () => {
+    const p = { company: $('#pCompany').value.trim(), industry: $('#pIndustry').value, size: +$('#pSize').value, pay: +$('#pPay').value, name: $('#pName').value.trim(), email: $('#pEmail').value.trim(), consent: $('#pConsent').checked };
+    const ok = p.company && p.name && /.+@.+\..+/.test(p.email) && p.consent;
+    $('#pErr').classList.toggle('show', !ok); if (!ok) return;
+    profile = p; qi = 0; renderQ(); show('s-survey');
+  });
+
+  // ---------- Survey ----------
+  function renderQ(){
+    const q = Q[qi];
+    $('#qPillar').textContent = q.p; $('#qCount').textContent = `${qi+1} / ${Q.length}`; $('#qBar').style.width = ((qi)/Q.length*100)+'%';
+    $('#qText').textContent = q.t; $('#qHelp').textContent = q.h;
+    $('#qOpts').innerHTML = q.o.map((o,i) => `<button class="opt ${answers[qi]===i?'sel':''}" data-i="${i}" data-l="${'ABCD'[i]}">${esc(o)}</button>`).join('');
+    $$('#qOpts .opt').forEach(b => b.addEventListener('click', () => { answers[qi] = +b.dataset.i; $$('#qOpts .opt').forEach(x=>x.classList.toggle('sel', x===b)); $('#nextBtn').disabled = false; setTimeout(next, 260); }));
+    $('#nextBtn').disabled = answers[qi] === null; $('#backBtn').style.visibility = qi===0 ? 'hidden' : 'visible';
+    $('#nextBtn').textContent = qi === Q.length-1 ? 'See my diagnosis →' : 'Next →';
+  }
+  function next(){ if (answers[qi] === null) return; if (qi < Q.length-1){ qi++; renderQ(); } else finish(); }
+  $('#nextBtn').addEventListener('click', next);
+  $('#backBtn').addEventListener('click', () => { if (qi>0){ qi--; renderQ(); } });
+
+  // ---------- Diagnosis ----------
+  function diagnose(){
+    const a = {}; Q.forEach((q,i) => a[q.k] = answers[i]);
+    const scores = {};
+    pillarOrder.forEach(p => { const idx = Q.map((q,i)=>q.p===p && q.k!=='open' ? i : -1).filter(i=>i>=0); const s = idx.reduce((t,i)=>t+answers[i],0); scores[p] = Math.round(s/(idx.length*3)*100); });
+    const ranked = [...pillarOrder].sort((x,y)=>scores[x]-scores[y]);
+    const weak = ranked.slice(0,2);
+    let stage = 'Scaling';
+    if (profile.size <= 1 || a.decisions <= 1) stage = 'Growing';
+    else if (profile.size >= 3 && a.decisions >= 2) stage = 'Sustaining';
+    const hc = sizeMid[profile.size], pay = payMid[profile.pay];
+    const openRoles = [6,3.5,1.5,0][a.open], ttfMonths = [3.5,2.5,1.5,0.75][a.ttf], bad = [3,2,1,0][a.badhires];
+    const diseng = [0.6,0.45,0.25,0.1][a.engaged], turn = [0.3,0.2,0.11,0.05][a.turnover];
+    const cost = {
+      vacant: openRoles * pay * ttfMonths,
+      badhires: bad * pay * 4,
+      quiet: hc * diseng * pay * 12 * 0.25,
+      turnover: hc * turn * pay * 3,
+    };
+    const total = Object.values(cost).reduce((x,y)=>x+y,0);
+    const lows = pillarOrder.filter(p => scores[p] < 50).length;
+    let tier;
+    if (profile.size === 0) tier = 'foundations';
+    else if (lows === 0) tier = 'toolkit';
+    else if (lows === 1) tier = 'sprint';
+    else if (lows <= 3) tier = 'partner';
+    else tier = 'transformation';
+    if (stage === 'Sustaining' && lows >= 3) tier = 'transformation';
+    result = { a, scores, ranked, weak, stage, cost, total, lo: total*0.8, hi: total*1.2, tier, date: new Date().toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'}) };
+    return result;
+  }
+  const stageLine = { Growing:'You are hiring fast and everything feels like it depends on you. The job now is to replace founder-memory with process so you stop being the bottleneck.', Scaling:'You have layers of management now. The job is to make decisions you are not in the room for as good as the ones you are, through bench strength, calibrated performance, and defensible pay.', Sustaining:'The question on the table is what happens to this business when you are not here. The job is succession depth and a culture that survives a change in leadership.' };
+
+  async function finish(){
+    show('s-think');
+    const steps = $$('#tSteps div');
+    for (let i=0;i<steps.length;i++){ steps[i].classList.add('now'); await sleep(520 + i*60); steps[i].classList.remove('now'); steps[i].classList.add('on'); }
+    const r = diagnose(); renderReport(r); renderFides(r); show('s-report');
+    await sleep(700);
+    $$('#report .pl .t i').forEach(i => i.style.width = i.dataset.w + '%');
+    toast(`Demo: in the live version this report is emailed to <b>${esc(profile.email)}</b> and Fides receives the lead.`);
+  }
+
+  function renderReport(r){
+    const t = tiers[r.tier];
+    const acts = [ pillarMeta[r.weak[0]].move, pillarMeta[r.weak[1]].move, 'Book the 30-minute follow-up call with Fides and bring this report. She will tell you which of these to do first, and which not to do at all.' ];
+    $('#report').innerHTML = `
+      <div class="rh">
+        <div><div class="k">SPARK Pulse Check · Diagnostic report</div><h1>${esc(profile.company)}</h1><div class="s">Prepared for ${esc(profile.name)} · ${esc(profile.industry)} · ${sizeLabel[profile.size]} employees · ${esc(r.date)}</div></div>
+        <div class="stage"><span>Business stage</span><b>${r.stage}</b></div>
+      </div>
+      <div class="body">
+        <h2>Where your business is</h2>
+        <p>${stageLine[r.stage]}</p>
+        <div class="grid2" style="margin-top:18px;">
+          <div>
+            <h2>The five SPARK pillars</h2>
+            <div class="pillars">${pillarOrder.map(p => `<div class="pl ${r.weak.includes(p)?'weak':''}"><div class="n">${p}<small>${pillarMeta[p].tag}</small></div><div class="t"><i data-w="${r.scores[p]}"></i></div><div class="v">${r.scores[p]}</div></div>`).join('')}</div>
+            <p style="font-size:12px;color:var(--ink-3);margin-top:10px;">Score out of 100. Under 50 means the pillar is costing you money now, not later.</p>
+          </div>
+          <div>
+            <h2>What the leaks are costing you</h2>
+            <div class="cost">
+              <div class="big">${peso(r.lo)} – ${peso(r.hi)}</div>
+              <div class="sub">estimated per year, based on your answers</div>
+              <table>
+                <tr><td>Vacant seats waiting to be filled</td><td>${peso(r.cost.vacant)}</td></tr>
+                <tr><td>Hiring mistakes in the last 12 months</td><td>${peso(r.cost.badhires)}</td></tr>
+                <tr><td>Quiet quitters: full salary, partial output</td><td>${peso(r.cost.quiet)}</td></tr>
+                <tr><td>Replacing people who chose to leave</td><td>${peso(r.cost.turnover)}</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <h2>The two pillars leaking most</h2>
+        <div class="grid2">
+          ${r.weak.map((p,i) => `<div class="leak"><div class="l">${i+1}</div><h3>${p} <span style="font-weight:400;color:var(--ink-3);font-size:13px;">· ${r.scores[p]} / 100</span></h3><p>${pillarMeta[p].see}</p><div class="fm"><b>First move</b>${pillarMeta[p].move}</div></div>`).join('')}
+        </div>
+        <h2>The right-sized next step</h2>
+        <div class="tier"><div><div class="k">Recommended</div><h3>${t.n}</h3><p>${t.d}</p></div><div class="pr"><b>${t.p}</b><span>${t.u}</span></div></div>
+        <h2>Three moves for this month</h2>
+        <ol class="acts">${acts.map(x=>`<li><span>${esc(x)}</span></li>`).join('')}</ol>
+        <div class="cta">
+          <button class="btn" id="bookBtn">Book my 30-minute call with Fides</button>
+          <button class="btn ghost" id="printBtn">Save as PDF</button>
+          <span class="note">In the live version, a copy of this report is emailed to ${esc(profile.email)}. If you do not see a clear path to ROI in the first 30 days of working together, we part ways. No lock-in.</span>
+        </div>
+      </div>
+      <div class="foot">Faith &amp; Possibilities HR Consulting · Fides Tanay, Founder &amp; CEO · 33 years as Group CHRO / SVP across SM Prime, Maybank, DITO, Analog Devices, and GSK. This report is generated from your self-assessment and is indicative only.</div>`;
+    $('#bookBtn').addEventListener('click', () => { window.location.href = 'contact.html#book'; });
+    $('#printBtn').addEventListener('click', () => window.print());
+  }
+
+  function renderFides(r){
+    const t = tiers[r.tier];
+    $('#leadCard').innerHTML = `
+      <div class="eh">To: <b>Fides's inbox</b> · Subject: <b>New Pulse Check · ${esc(profile.company)} · ${r.stage} · ${r.weak.join(' + ')}</b></div>
+      <div class="eb">
+        <p style="margin:0 0 8px;">Hi Fides, a new CEO just completed the Pulse Check. Here is the summary and the suggested next step.</p>
+        <table>
+          <tr><td>Contact</td><td><b>${esc(profile.name)}</b><br>${esc(profile.email)}</td></tr>
+          <tr><td>Company</td><td>${esc(profile.company)} · ${esc(profile.industry)} · ${sizeLabel[profile.size]} employees</td></tr>
+          <tr><td>Stage</td><td>${r.stage}</td></tr>
+          <tr><td>Pillar scores</td><td>${pillarOrder.map(p=>`${p} ${r.scores[p]}`).join(' · ')}</td></tr>
+          <tr><td>Leaking most</td><td><b>${r.weak.join(' and ')}</b></td></tr>
+          <tr><td>Estimated cost</td><td>${peso(r.lo)} to ${peso(r.hi)} per year</td></tr>
+          <tr><td>Suggested tier</td><td><b>${t.n}</b> (${t.p})</td></tr>
+          <tr><td>AI note</td><td>${aiNote(r)}</td></tr>
+        </table>
+        <div class="ans"><details><summary>All 15 answers</summary><ul>${Q.map((q,i)=>`<li>${esc(q.t)}<br><b>${esc(q.o[answers[i]])}</b></li>`).join('')}</ul></details></div>
+        <p style="margin:12px 0 0;font-size:12.5px;color:var(--ink-3);">Consent recorded ${esc(r.date)} · Data Privacy Act notice accepted · Delete on request</p>
+      </div>`;
+    const mine = { co: profile.company, who: `${profile.name} · ${sizeLabel[profile.size]} employees`, stage: r.stage, leak: r.weak.join(', '), cost: r.total, tier: t.n, hot: r.tier==='sprint'||r.tier==='partner'||r.tier==='transformation', mine:true };
+    $('#leadRows').innerHTML = [mine, ...sampleLeads].map(l => `<tr class="${l.mine?'new':''}"><td class="co"><b>${esc(l.co)}</b><span>${esc(l.who)}</span></td><td>${l.stage}</td><td>${esc(l.leak)}</td><td style="font-variant-numeric:tabular-nums">${peso(l.cost)}</td><td><span class="tagp ${l.hot?'hot':''}">${esc(l.tier)}</span></td></tr>`).join('');
+  }
+  function aiNote(r){
+    const a = r.a; const bits = [];
+    if (a.decisions <= 1) bits.push('CEO still makes most decisions personally');
+    if (a.absence <= 1) bits.push('business would stall without the CEO');
+    if (a.badhires === 0) bits.push('three or more hiring mistakes in 12 months');
+    if (a.lowperf === 0) bits.push('low performers are never addressed');
+    if (a.payfor === 0) bits.push('pay rewards tenure, not results');
+    if (a.turnover === 0) bits.push('turnover above 25%');
+    if (!bits.length) bits.push('fundamentals are mostly in place; this is a fine-tuning conversation');
+    return 'Open the call with: ' + bits.slice(0,3).join('; ') + '.';
+  }
+
+  // Fides sample rows when nothing completed yet
+  $('#leadRows').innerHTML = sampleLeads.map(l => `<tr><td class="co"><b>${esc(l.co)}</b><span>${esc(l.who)}</span></td><td>${l.stage}</td><td>${esc(l.leak)}</td><td style="font-variant-numeric:tabular-nums">${peso(l.cost)}</td><td><span class="tagp ${l.hot?'hot':''}">${esc(l.tier)}</span></td></tr>`).join('');
+
+  // ---------- View switch ----------
+  let lastCeo = 's-intro';
+  $$('.viewsw button').forEach(b => b.addEventListener('click', () => {
+    $$('.viewsw button').forEach(x=>x.classList.toggle('sel', x===b));
+    if (b.dataset.v === 'fides'){ const cur = $('.screen.active'); if (cur && cur.id !== 's-fides') lastCeo = cur.id; show('s-fides'); }
+    else { show(result ? 's-report' : lastCeo); if (result) setTimeout(()=>$$('#report .pl .t i').forEach(i => i.style.width = i.dataset.w + '%'), 50); }
+  }));
+})();
+</script>
+</body>
+</html>

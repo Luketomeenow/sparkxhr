@@ -10,6 +10,7 @@ Six-page marketing site for SPARKXHR, built on the Fluxa layout in the navy and 
 | Investment Tiers | `pricing.html` |
 | About Fides | `about.html` |
 | Contact, booking, privacy notice | `contact.html` |
+| SPARK Pulse Check (demo) | `pulse-check.html` |
 
 ## Editing
 
@@ -30,7 +31,7 @@ The build prints a `TODO` line for every setting that still needs a value.
 
 ## Settings to fill before launch (`CONFIG` in build.py)
 
-- `PULSE_URL`: currently the local Pulse Check demo. Point it at the live Diagnostic Tool.
+- `PULSE_URL`: currently `pulse-check.html`, the rules-based demo, which says clearly that nothing is emailed yet. Point it at the live Diagnostic Tool when it ships.
 - `CALENDAR_URL`: Google Calendar appointment page or Calendly link for the booking embed.
 - `FORM_ACTION`: form endpoint for the contact form. While empty, the form runs in preview mode.
 - `EMAIL`: public contact email. Hidden while empty.

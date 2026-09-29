@@ -29,9 +29,9 @@ SRC = ROOT / "src"
 # Site-wide settings. Fill the empty values before launch.
 # --------------------------------------------------------------------------
 CONFIG = {
-    # Where "Take the Pulse Check" buttons go. Points at the local demo until
-    # the live SPARKXHR Diagnostic Tool ships in Milestone 1.
-    "PULSE_URL": "../SPARK_HR_Pulse_Check_Demo.html",
+    # Where "Take the Pulse Check" buttons go. pulse-check.html is the
+    # rules-based demo; switch to the live SPARKXHR Diagnostic Tool when it ships.
+    "PULSE_URL": "pulse-check.html",
     # Google Calendar appointment page or Calendly link, embedded on Contact.
     "CALENDAR_URL": "",
     # Form endpoint (e.g. Formspree, Basin, or the platform API). Empty = preview mode.
@@ -347,8 +347,8 @@ def build():
         print(f"built {filename}")
 
     todo = []
-    if CONFIG["PULSE_URL"].startswith(".."):
-        todo.append("PULSE_URL points at the local demo; switch to the live Diagnostic Tool at launch")
+    if CONFIG["PULSE_URL"] == "pulse-check.html":
+        todo.append("PULSE_URL points at the Pulse Check demo; switch to the live Diagnostic Tool at launch")
     for k in ("CALENDAR_URL", "FORM_ACTION", "EMAIL"):
         if not CONFIG[k]:
             todo.append(f"{k} is empty")
